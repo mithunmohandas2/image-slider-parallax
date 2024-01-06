@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
@@ -16,10 +16,19 @@ import slide_image_5 from './assets/images/img_5.jpg';
 import slide_image_6 from './assets/images/img_6.jpg';
 import slide_image_7 from './assets/images/img_7.jpg';
 
-
-
 function App() {
   const [background, setBackground] = useState(slide_image_1)
+  const swiperRef = useRef(null); // Reference to the Swiper instance
+
+  const handleSlideChange = () => {
+    if (swiperRef.current !== null) {
+      const activeIndex = swiperRef.current.swiper.activeIndex;
+      const activeSlide = swiperRef.current.swiper.slides[activeIndex];
+      const activeSlideImageSrc = activeSlide.querySelector('img').getAttribute('src');
+      // console.log('Active slide image source:', activeSlideImageSrc);
+      setBackground(activeSlideImageSrc)
+    }
+  };
 
   return (
     <>
@@ -44,6 +53,8 @@ function App() {
           }}
           modules={[EffectCoverflow, Pagination, Navigation]}
           className="swiper_container"
+          ref={swiperRef} // Set the ref to the Swiper instance
+          onSlideChange={handleSlideChange} // Call the function when the slide changes
         >
           <SwiperSlide> <img src={slide_image_1} alt="slide_image1" /> </SwiperSlide>
           <SwiperSlide> <img src={slide_image_2} alt="slide_image2" /> </SwiperSlide>
